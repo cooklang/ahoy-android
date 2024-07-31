@@ -1,67 +1,77 @@
-apply plugin: 'com.android.library'
-apply plugin: 'com.github.dcendents.android-maven'
+plugins {
+    id 'com.android.library'
+}
 
 group = 'com.github.instacart'
-version = versionName
+version = project.versionName
 
 android {
-    compileSdkVersion 28
+    namespace 'com.github.instacart.ahoy'
+    compileSdkVersion 33
 
     defaultConfig {
-        minSdkVersion 14
-        targetSdkVersion 28
-        versionCode versionCode as Integer
-        versionName versionName
+        minSdkVersion 21
+        targetSdkVersion 33
+        versionCode project.versionCode as Integer
+        versionName project.versionName
 
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+        buildConfigField 'String', 'VERSION_NAME', "\"${project.versionName}\""
     }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
     packagingOptions {
         exclude 'META-INF/**'
+    }
+
+    buildFeatures {
+        buildConfig true
     }
 }
 
 dependencies {
-    implementation "androidx.annotation:annotation:1.0.2"
-    implementation "androidx.core:core:1.0.1"
+    implementation 'androidx.annotation:annotation:1.7.1'
+    implementation 'androidx.core:core:1.13.1'
 
-    implementation "com.jakewharton.timber:timber:4.7.1"
+    implementation 'com.jakewharton.timber:timber:4.7.1'
 
-    annotationProcessor "com.google.auto.value:auto-value:$autoValueVersion"
-    compileOnly "com.google.auto.value:auto-value-annotations:$autoValueVersion"
+    annotationProcessor "com.google.auto.value:auto-value:${project.autoValueVersion}"
+    compileOnly "com.google.auto.value:auto-value-annotations:${project.autoValueVersion}"
 
-    implementation "com.ryanharter.auto.value:auto-value-parcel-adapter:$autoValueParcelVersion"
-    annotationProcessor "com.ryanharter.auto.value:auto-value-parcel:$autoValueParcelVersion"
+    implementation "com.ryanharter.auto.value:auto-value-parcel-adapter:${project.autoValueParcelVersion}"
+    annotationProcessor "com.ryanharter.auto.value:auto-value-parcel:${project.autoValueParcelVersion}"
 
-    implementation "com.fasterxml.jackson.core:jackson-annotations:$jacksonVersion"
-    implementation "com.fasterxml.jackson.core:jackson-core:$jacksonVersion"
-    implementation "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
+    implementation "com.fasterxml.jackson.core:jackson-annotations:${project.jacksonVersion}"
+    implementation "com.fasterxml.jackson.core:jackson-core:${project.jacksonVersion}"
+    implementation "com.fasterxml.jackson.core:jackson-databind:${project.jacksonVersion}"
 
-    implementation "com.squareup.okhttp3:logging-interceptor:$okhttpVersion"
-    implementation "com.squareup.okhttp3:okhttp:$okhttpVersion"
+    implementation "com.squareup.okhttp3:logging-interceptor:${project.okhttpVersion}"
+    implementation "com.squareup.okhttp3:okhttp:${project.okhttpVersion}"
 
-    implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofitVersion"
-    implementation "com.squareup.retrofit2:converter-jackson:$retrofitVersion"
-    implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:${project.retrofitVersion}"
+    implementation "com.squareup.retrofit2:converter-jackson:${project.retrofitVersion}"
+    implementation "com.squareup.retrofit2:retrofit:${project.retrofitVersion}"
 
-    implementation "io.reactivex.rxjava2:rxjava:2.2.8"
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.8'
 
-    testImplementation "junit:junit:4.12"
-    testImplementation "org.mockito:mockito-core:2.25.1"
+    testImplementation 'junit:junit:4.12'
+    testImplementation 'org.mockito:mockito-core:2.25.1'
 }
 
-task sourcesJar(type: Jar) {
+tasks.register('sourcesJar', Jar) {
     from android.sourceSets.main.java.srcDirs
-    classifier = 'sources'
+    archiveClassifier.set('sources')
 }
 
 artifacts {
