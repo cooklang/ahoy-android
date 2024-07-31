@@ -6,7 +6,7 @@ android {
     defaultConfig {
         namespace "com.instacart.ahoy.sample"
         applicationId "com.instacart.ahoy.sample"
-        minSdkVersion 14
+        minSdkVersion 21
         targetSdk 33
         versionCode versionCode as Integer
         versionName versionName

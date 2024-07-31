@@ -9,7 +9,7 @@
         android:name=".App"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".SimpleActivity">
+        <activity android:name=".SimpleActivity" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>

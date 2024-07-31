@@ -70,6 +70,19 @@ dependencies {
     testImplementation 'org.mockito:mockito-core:2.25.1'
 }
 
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                from components.findByName('release')
+                groupId = 'com.github.instacart'
+                artifactId = 'ahoy-android'
+                version = project.versionName
+            }
+        }
+    }
+}
+
 tasks.register('sourcesJar', Jar) {
     from android.sourceSets.main.java.srcDirs
     archiveClassifier.set('sources')
