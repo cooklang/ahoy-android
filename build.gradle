@@ -2,7 +2,6 @@ buildscript {
     repositories {
         google()
         mavenCentral()
-        maven { url "https://jitpack.io" }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:8.4.2'
@@ -10,13 +9,15 @@ buildscript {
 }
 
 plugins {
-    id 'com.github.ben-manes.versions' version '0.21.0'
+    id 'com.android.application' version "8.4.2" apply false
     id 'maven-publish'
+    id 'com.github.ben-manes.versions' version '0.21.0'
 }
 
 allprojects {
     repositories {
         google()
+        maven { url "https://jitpack.io" }
         mavenCentral()
     }
 }
