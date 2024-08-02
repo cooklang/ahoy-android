@@ -66,7 +66,7 @@ public class Retrofit2Delegate implements AhoyDelegate {
     public static abstract class VisitResponse {
 
         @JsonCreator
-        public static VisitResponse create(@JsonProperty("visit_id") String visitId) {
+        public static VisitResponse create(@JsonProperty("visit_token") String visitId) {
             return new AutoValue_Retrofit2Delegate_VisitResponse(visitId);
         }
 

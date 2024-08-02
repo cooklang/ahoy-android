@@ -15,3 +15,5 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+
+-keep class com.github.instacart.ahoy.delegate.retrofit2.Retrofit2Delegate { *; }
