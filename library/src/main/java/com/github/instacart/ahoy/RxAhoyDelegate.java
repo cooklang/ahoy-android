@@ -21,8 +21,8 @@ import com.github.instacart.ahoy.delegate.AhoyDelegate;
 import com.github.instacart.ahoy.delegate.AhoyDelegate.AhoyCallback;
 import com.github.instacart.ahoy.delegate.VisitParams;
 
-import io.reactivex.BackpressureStrategy;
-import io.reactivex.Flowable;
+import io.reactivex.rxjava3.core.BackpressureStrategy;
+import io.reactivex.rxjava3.core.Flowable;
 
 
 public class RxAhoyDelegate {

@@ -9,12 +9,12 @@ import org.junit.Test;
 
 import java.util.concurrent.TimeUnit;
 
-import io.reactivex.Flowable;
-import io.reactivex.Observable;
-import io.reactivex.functions.Consumer;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.schedulers.TestScheduler;
-import io.reactivex.subscribers.TestSubscriber;
+import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.functions.Consumer;
+import io.reactivex.rxjava3.plugins.RxJavaPlugins;
+import io.reactivex.rxjava3.schedulers.TestScheduler;
+import io.reactivex.rxjava3.subscribers.TestSubscriber;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doAnswer;
@@ -24,7 +24,7 @@ import static org.mockito.Mockito.verify;
 
 public class DisposedStreamTest {
 
-    @Test public void testErrorAfterDisposal() throws Exception {
+    @Test public void testErrorAfterDisposal() throws Throwable {
         AhoyDelegate delegate = mock(AhoyDelegate.class);
         VisitParams params = mock(VisitParams.class);
 
@@ -49,7 +49,7 @@ public class DisposedStreamTest {
         TestSubscriber<Visit> subscriber = new TestSubscriber<>();
 
         stream.subscribe(subscriber);
-        subscriber.dispose();
+        subscriber.cancel();
         scheduler.advanceTimeBy(2, TimeUnit.SECONDS);
 
         subscriber.assertNoErrors();

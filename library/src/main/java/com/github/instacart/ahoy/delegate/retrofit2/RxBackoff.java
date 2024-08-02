@@ -17,9 +17,9 @@ package com.github.instacart.ahoy.delegate.retrofit2;
 
 import java.util.concurrent.TimeUnit;
 
-import io.reactivex.Observable;
-import io.reactivex.ObservableTransformer;
-import io.reactivex.functions.Function;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.ObservableTransformer;
+import io.reactivex.rxjava3.functions.Function;
 import retrofit2.HttpException;
 
 class RxBackoff {

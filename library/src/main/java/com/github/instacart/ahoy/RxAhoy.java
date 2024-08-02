@@ -17,8 +17,8 @@ package com.github.instacart.ahoy;
 
 import com.github.instacart.ahoy.Ahoy.VisitListener;
 
-import io.reactivex.BackpressureStrategy;
-import io.reactivex.Flowable;
+import io.reactivex.rxjava3.core.BackpressureStrategy;
+import io.reactivex.rxjava3.core.Flowable;
 
 public class RxAhoy {
 
