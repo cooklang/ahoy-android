@@ -116,6 +116,9 @@ public class Retrofit2Delegate implements AhoyDelegate {
     private void makeRequest(String visitToken, final VisitParams visitParams, final AhoyCallback callback) {
         Map<String, Object> request = new ArrayMap<>();
         request.put(Visit.OS, deviceInfo.getOs());
+        request.put(Visit.APP_VERSION, deviceInfo.getAppVersion());
+        request.put(Visit.OS_VERSION, deviceInfo.getOsVersion());
+        request.put(Visit.PLATFORM, deviceInfo.getPlatform());
         request.put(Visit.USER_AGENT, deviceInfo.getUserAgent());
         request.put(Visit.SCREEN_HEIGHT, deviceInfo.getScreenHeightDp());
         request.put(Visit.SCREEN_WIDTH, deviceInfo.getScreenWidthDp());

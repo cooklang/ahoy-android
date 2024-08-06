@@ -21,4 +21,7 @@ public interface DeviceInfo {
     int getScreenWidthDp();
     String getUserAgent();
     String getOs();
+    String getOsVersion();
+    String getAppVersion();
+    default String getPlatform() { return "Android"; }
 }
