@@ -20,23 +20,18 @@ import android.content.res.Resources;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.github.instacart.ahoy.AhoySingleton;
 import com.github.instacart.ahoy.Visit;
+import com.github.instacart.ahoy.sample.databinding.VisitViewBinding;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.disposables.Disposable;
 
 public class VisitView extends LinearLayout {
 
-    @BindView(R.id.visit_fetch_progress) ProgressBar visitFetchProgress;
-    @BindView(R.id.visit_token) TextView visitTokenView;
-    @BindView(R.id.visitor_token) TextView visitorTokenView;
-
+    private VisitViewBinding binding;
     private Disposable mDisposable;
 
     public VisitView(Context context, AttributeSet attrs) {
@@ -45,13 +40,13 @@ public class VisitView extends LinearLayout {
 
     @Override protected void onFinishInflate() {
         super.onFinishInflate();
-        ButterKnife.bind(this);
+        binding = VisitViewBinding.bind(this);
     }
 
     @Override protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        mDisposable = AhoySingleton.visitStream()
-                .startWith(AhoySingleton.visit())
+        mDisposable = Flowable.just(AhoySingleton.visit())
+                .concatWith(AhoySingleton.visitStream())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(visit -> updateViews(AhoySingleton.visitorToken(), visit));
     }
@@ -63,13 +58,13 @@ public class VisitView extends LinearLayout {
 
     public void updateViews(String visitorToken, Visit visit) {
         Resources resources = getResources();
-        visitorTokenView.setText(resources.getString(R.string.visit_token, visitorToken));
+        binding.visitorToken.setText(resources.getString(R.string.visitor_token, visitorToken));
         boolean isVisitValid = visit != null && visit.isValid();
-        visitFetchProgress.setVisibility(isVisitValid ? View.INVISIBLE : View.VISIBLE);
+        binding.visitFetchProgress.setVisibility(isVisitValid ? View.INVISIBLE : View.VISIBLE);
         if (isVisitValid) {
-            visitTokenView.setText(resources.getString(R.string.visit_token, visit.visitToken()));
+            binding.visitToken.setText(resources.getString(R.string.visit_token, visit.visitToken()));
         } else {
-            visitTokenView.setText(resources.getString(R.string.visit_token, ""));
+            binding.visitToken.setText(resources.getString(R.string.visit_token, ""));
         }
     }
 }

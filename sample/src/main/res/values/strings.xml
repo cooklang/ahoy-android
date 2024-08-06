@@ -3,6 +3,7 @@
     <string name="edit_utms">Edit Utms</string>
     <string name="new_visit">New visit</string>
     <string name="save_utm_params">Save Changes</string>
+    <string name="visitor_token">Visitor token: %1$s</string>
     <string name="visit_token">Visit token: %1$s</string>
     <string name="utm_activity">UTM Activity</string>
     <string name="utm_campaign">Campaign</string>

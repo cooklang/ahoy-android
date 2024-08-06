@@ -17,34 +17,30 @@ package com.github.instacart.ahoy.sample;
 
 import android.content.Intent;
 import android.os.Bundle;
+
 import androidx.appcompat.app.AppCompatActivity;
-import android.view.View;
 
 import com.github.instacart.ahoy.AhoySingleton;
+import com.github.instacart.ahoy.sample.databinding.SimpleActivityBinding;
 
 import java.util.Collections;
 
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-
 public class SimpleActivity extends AppCompatActivity {
+
+    private SimpleActivityBinding binding;
+
 
     @Override protected void onCreate(Bundle state) {
         super.onCreate(state);
-        setContentView(R.layout.simple_activity);
-        ButterKnife.bind(this);
+        binding = SimpleActivityBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
+        binding.newVisit.setOnClickListener(view -> AhoySingleton.newVisit(Collections.emptyMap()));
+        binding.saveUtms.setOnClickListener(view -> startActivity(new Intent(this, UtmActivity.class)));
     }
 
-    @OnClick({R.id.new_visit, R.id.save_utms })
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.new_visit:
-                AhoySingleton.newVisit(Collections.emptyMap());
-                break;
-            case R.id.save_utms:
-                startActivity(new Intent(this, UtmActivity.class));
-                break;
-            default: break;
-        }
+    @Override protected void onDestroy() {
+        super.onDestroy();
+        binding = null;
     }
 }
