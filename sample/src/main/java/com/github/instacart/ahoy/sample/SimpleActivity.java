@@ -37,7 +37,7 @@ public class SimpleActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         binding.newVisit.setOnClickListener(view -> AhoySingleton.newVisit(Collections.emptyMap()));
-        binding.trackEvent.setOnClickListener(view -> AhoySingleton.trackEvent(new Event("Test event", Collections.emptyMap())));
+        binding.trackEvent.setOnClickListener(view -> AhoySingleton.trackEvent(Event.create("Test event", Collections.emptyMap())));
         binding.saveUtms.setOnClickListener(view -> startActivity(new Intent(this, UtmActivity.class)));
     }
 

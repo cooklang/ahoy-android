@@ -2,83 +2,57 @@ package com.github.instacart.ahoy;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.ArrayMap;
 
+import androidx.annotation.NonNull;
+import androidx.collection.ArrayMap;
+
+import com.github.instacart.ahoy.utils.MapTypeAdapter;
+import com.github.instacart.ahoy.utils.TypeUtil;
+import com.google.auto.value.AutoValue;
+import com.ryanharter.auto.value.parcel.ParcelAdapter;
+
+import java.util.Collections;
 import java.util.Date;
 import java.util.Map;
+import java.util.UUID;
 
-public class Event implements Parcelable {
-    private String id;
-    private String name;
-    private Map<String, Object> properties;
-    private Date time;
+@AutoValue
+public abstract class Event implements Parcelable {
 
-    public Event(String id, String name, Map<String, Object> properties, Date time) {
-        this.id = id;
-        this.name = name;
-        this.properties = properties;
-        this.time = time;
+    public abstract String id();
+    public abstract String name();
+    @ParcelAdapter(MapTypeAdapter.class) public abstract Map<String, Object> properties();
+    public abstract Date time();
+
+    public static Event create(String name, Map<String, Object> properties) {
+        String id = UUID.randomUUID().toString();
+        properties = TypeUtil.ifNull(properties, Collections.emptyMap());
+        Date time = new Date();
+        return new AutoValue_Event(id, name, Collections.unmodifiableMap(properties), time);
     }
 
-    public Event(String name, Map<String, Object> properties) {
-        this(null, name, properties, new Date());
+    public static Builder builder() {
+        return new AutoValue_Event.Builder()
+                .time(new Date())
+                .properties(new ArrayMap<>());
     }
 
-    protected Event(Parcel in) {
-        id = in.readString();
-        name = in.readString();
-        properties = (Map<String, Object>) in.readSerializable();
-        time = new Date(in.readLong());
-    }
-
-    public static final Creator<Event> CREATOR = new Creator<Event>() {
-        @Override
-        public Event createFromParcel(Parcel in) {
-            return new Event(in);
-        }
-
-        @Override
-        public Event[] newArray(int size) {
-            return new Event[size];
-        }
-    };
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(id);
-        dest.writeString(name);
-        dest.writeSerializable((java.io.Serializable) properties);
-        dest.writeLong(time.getTime());
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public Map<String, Object> getProperties() {
-        return properties;
-    }
-
-    public Date getTime() {
-        return time;
+    @AutoValue.Builder
+    public abstract static class Builder {
+        public abstract Builder id(String id);
+        public abstract Builder name(String name);
+        public abstract Builder properties(Map<String, Object> properties);
+        public abstract Builder time(Date time);
+        public abstract Event build();
     }
 
     // Returns a Map<String, Object> representation of the Event object
     public Map<String, Object> toMap() {
-        Map<String, Object> requestBody = new ArrayMap<>();
-        requestBody.put("id", id);
-        requestBody.put("name", name);
-        requestBody.put("properties", properties);
-        requestBody.put("time", time);
+        Map<String, Object> requestBody = new android.util.ArrayMap<>();
+        requestBody.put("id", id());
+        requestBody.put("name", name());
+        requestBody.put("properties", properties());
+        requestBody.put("time", time());
         return requestBody;
     }
 }

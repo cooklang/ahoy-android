@@ -22,6 +22,8 @@ import com.github.instacart.ahoy.delegate.DeviceInfo;
 import com.github.instacart.ahoy.delegate.retrofit2.Retrofit2Delegate;
 import com.github.instacart.ahoy.utils.SimpleDeviceInfo;
 
+import timber.log.Timber;
+
 public class App extends Application {
 
     @Override public void onCreate() {
@@ -29,5 +31,6 @@ public class App extends Application {
         DeviceInfo deviceInfo = new SimpleDeviceInfo();
         String demoUrl = "https://example.com/";
         AhoySingleton.init(this, Retrofit2Delegate.factory(demoUrl, 60 * 1000, deviceInfo, true), true);
+        Timber.plant(new Timber.DebugTree());
     }
 }
