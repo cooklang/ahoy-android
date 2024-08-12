@@ -78,6 +78,16 @@ public class Ahoy {
     }
 
     @AutoValue
+    public static abstract class TrackEventRequest implements Request {
+
+        public static Request create(Event event) {
+            return new AutoValue_Ahoy_TrackEventRequest(event);
+        }
+
+        public abstract Event getEvent();
+    }
+
+    @AutoValue
     public static abstract class SaveExtrasRequest implements Request {
 
         public static Request create(Map<String, Object> extras) {
@@ -172,6 +182,9 @@ public class Ahoy {
             if (request instanceof NewVisitRequest) {
                 NewVisitRequest newVisitRequest = (NewVisitRequest) request;
                 visitFlowable = RxAhoyDelegate.createNewVisitStream(delegate, newVisitRequest.getVisitParams());
+            } else if (request instanceof TrackEventRequest) {
+                TrackEventRequest trackEventRequest = (TrackEventRequest) request;
+                visitFlowable = RxAhoyDelegate.createTrackEventStream(visit.visitToken(), visitorToken, delegate, trackEventRequest.getEvent());
             } else {
                 SaveExtrasRequest saveExtrasRequest = (SaveExtrasRequest) request;
                 VisitParams params = VisitParams.create(visitorToken, visit, saveExtrasRequest.getExtras());
@@ -254,6 +267,26 @@ public class Ahoy {
         synchronized (updateQueue) {
             VisitParams visitParams = VisitParams.create(visitorToken, null, extraParams);
             updateQueue.add(NewVisitRequest.create(visitParams));
+        }
+        scheduleUpdate(System.currentTimeMillis());
+    }
+
+    /**
+     * Track event. If a visit was already saved, new visit is started
+     * <p>
+     * New values for the same keys, override stored parameters.
+     * <p>
+     * the {@link AhoyDelegate}.
+     *
+     * @param extraParams Extra parameters passed to {@link AhoyDelegate}. Null will saved parameters.
+     */
+    public void trackEvent(Event event) {
+        if (shutdown) {
+            throw new IllegalArgumentException("Ahoy has been shutdownAndClear");
+        }
+
+        synchronized (updateQueue) {
+            updateQueue.add(TrackEventRequest.create(event));
         }
         scheduleUpdate(System.currentTimeMillis());
     }

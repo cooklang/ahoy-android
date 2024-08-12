@@ -15,14 +15,13 @@
  */
 package com.github.instacart.ahoy.delegate;
 
-import androidx.annotation.NonNull;
-
+import com.github.instacart.ahoy.Event;
 import com.github.instacart.ahoy.Visit;
 
 public interface AhoyDelegate {
 
     interface AhoyCallback {
-        void onSuccess(@NonNull Visit visit);
+        void onSuccess(Visit visit);
         void onFailure(Throwable throwable);
     }
 
@@ -40,6 +39,8 @@ public interface AhoyDelegate {
      * @param callback AhoyCallback reporting success or failure & returning new visit.
      */
     void saveVisit(VisitParams params, AhoyCallback callback);
+
+    void trackEvent(String visitToken, String visitorToken, Event event, AhoyCallback callback);
 
     /**
      * Save extra parameters. Visit may or may not be started.

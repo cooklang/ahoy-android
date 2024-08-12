@@ -16,46 +16,44 @@
 package com.github.instacart.ahoy.sample;
 
 import android.os.Bundle;
-import androidx.collection.ArrayMap;
-import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.collection.ArrayMap;
+
 import com.github.instacart.ahoy.AhoySingleton;
 import com.github.instacart.ahoy.Visit;
+import com.github.instacart.ahoy.sample.databinding.UtmActivityBinding;
 import com.github.instacart.ahoy.utils.TypeUtil;
 
+import java.util.Collections;
 import java.util.Map;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.disposables.Disposable;
 
 public class UtmActivity extends AppCompatActivity {
 
-    @BindView(R.id.utm_campaign) TextView utmCampaign;
-    @BindView(R.id.utm_content) TextView utmContent;
-    @BindView(R.id.utm_medium) TextView utmMedium;
-    @BindView(R.id.utm_source) TextView utmSource;
-    @BindView(R.id.utm_term) TextView utmTerm;
+    private UtmActivityBinding binding;
 
     private Disposable mDisposable;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.utm_activity);
-        ButterKnife.bind(this);
+        binding = UtmActivityBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
         setTitle(getString(R.string.utm_activity));
+        binding.saveUtmParams.setOnClickListener(this::onClick);
     }
 
     @Override protected void onResume() {
         super.onResume();
 
-        mDisposable = AhoySingleton.visitStream()
-                .startWith(AhoySingleton.visit())
+        mDisposable = Flowable.just(AhoySingleton.visit())
+                .concatWith(AhoySingleton.visitStream())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::showUtmParams);
     }
@@ -66,11 +64,11 @@ public class UtmActivity extends AppCompatActivity {
     }
 
     private void showUtmParams(Visit visit) {
-        utmCampaign.setText(visit.extra(Visit.UTM_CAMPAIGN));
-        utmContent.setText(visit.extra(Visit.UTM_CONTENT));
-        utmMedium.setText(visit.extra(Visit.UTM_MEDIUM));
-        utmSource.setText(visit.extra(Visit.UTM_SOURCE));
-        utmTerm.setText(visit.extra(Visit.UTM_TERM));
+        binding.utmCampaign.setText(visit.extra(Visit.UTM_CAMPAIGN));
+        binding.utmContent.setText(visit.extra(Visit.UTM_CONTENT));
+        binding.utmMedium.setText(visit.extra(Visit.UTM_MEDIUM));
+        binding.utmSource.setText(visit.extra(Visit.UTM_SOURCE));
+        binding.utmTerm.setText(visit.extra(Visit.UTM_TERM));
     }
 
     private static void saveContent(Map<String, Object> params, String key, TextView textView) {
@@ -80,20 +78,16 @@ public class UtmActivity extends AppCompatActivity {
         }
     }
 
-    @OnClick({R.id.save_utm_params})
     public void onClick(View view) {
         final Map<String, Object> utmParams = new ArrayMap<>();
-        saveContent(utmParams, Visit.UTM_CAMPAIGN, utmCampaign);
-        saveContent(utmParams, Visit.UTM_CONTENT, utmContent);
-        saveContent(utmParams, Visit.UTM_MEDIUM, utmMedium);
-        saveContent(utmParams, Visit.UTM_SOURCE, utmSource);
-        saveContent(utmParams, Visit.UTM_TERM, utmTerm);
+        saveContent(utmParams, Visit.UTM_CAMPAIGN, binding.utmCampaign);
+        saveContent(utmParams, Visit.UTM_CONTENT, binding.utmContent);
+        saveContent(utmParams, Visit.UTM_MEDIUM, binding.utmMedium);
+        saveContent(utmParams, Visit.UTM_SOURCE, binding.utmSource);
+        saveContent(utmParams, Visit.UTM_TERM, binding.utmTerm);
 
-        switch (view.getId()) {
-            case R.id.save_utm_params:
-                AhoySingleton.saveExtras(utmParams);
-                break;
-            default: break;
+        if (view.getId() == R.id.save_utm_params) {
+            AhoySingleton.saveExtras(utmParams);
         }
     }
 }

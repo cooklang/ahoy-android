@@ -44,6 +44,19 @@ public class RxAhoyDelegate {
         }), BackpressureStrategy.LATEST);
     }
 
+    public static Flowable<Visit> createTrackEventStream(final String visitToken, final String visitorToken, final AhoyDelegate delegate, final Event event) {
+
+        return Flowable.create(emitter -> delegate.trackEvent(visitToken, visitorToken, event, new AhoyCallback() {
+            @Override public void onSuccess(Visit visit) {
+                emitter.onComplete();
+            }
+
+            @Override public void onFailure(Throwable throwable) {
+                emitter.tryOnError(throwable);
+            }
+        }), BackpressureStrategy.LATEST);
+    }
+
     public static Flowable<Visit> createNewVisitStream(final AhoyDelegate delegate, final VisitParams params) {
 
         return Flowable.create(emitter -> delegate.saveVisit(params, new AhoyCallback() {

@@ -24,7 +24,6 @@ import com.github.instacart.ahoy.Visit;
 import com.github.instacart.ahoy.delegate.DeviceInfo;
 
 public class SimpleDeviceInfo implements DeviceInfo {
-
     public SimpleDeviceInfo() {
     }
 
@@ -46,6 +45,19 @@ public class SimpleDeviceInfo implements DeviceInfo {
     }
 
     @Override public String getOs() {
-        return Visit.OS_ANDROID;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            return Build.VERSION.BASE_OS;
+        } else {
+            return Build.VERSION.CODENAME;
+        }
+    }
+
+    @Override public String getOsVersion() {
+        String osVersion = Build.VERSION.RELEASE;
+        return String.format("Android-%s", osVersion);
+    }
+
+    @Override public String getAppVersion() {
+        return BuildConfig.VERSION_NAME;
     }
 }

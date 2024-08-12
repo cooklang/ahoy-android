@@ -33,6 +33,9 @@ public abstract class Visit implements Parcelable {
     public static final String LANDING_PAGE = "landing_page";
     public static final String OS = "os";
     public static final String OS_ANDROID = "Android";
+    public static final String PLATFORM = "platform";
+    public static final String APP_VERSION = "app_version";
+    public static final String OS_VERSION = "os_version";
     public static final String REFERRER = "referrer";
     public static final String SCREEN_WIDTH = "screen_width";
     public static final String SCREEN_HEIGHT = "screen_height";

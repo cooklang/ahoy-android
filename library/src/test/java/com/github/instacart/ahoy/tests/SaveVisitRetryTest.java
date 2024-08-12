@@ -16,6 +16,7 @@
 package com.github.instacart.ahoy.tests;
 
 import com.github.instacart.ahoy.Ahoy;
+import com.github.instacart.ahoy.Event;
 import com.github.instacart.ahoy.LifecycleCallbackWrapper;
 import com.github.instacart.ahoy.Storage;
 import com.github.instacart.ahoy.Visit;
@@ -84,6 +85,11 @@ public class SaveVisitRetryTest {
                     return;
                 }
                 callback.onFailure(new RuntimeException("Testing retry mechanism"));
+            }
+
+            @Override
+            public void trackEvent(String visitToken, String visitorToken, Event event, AhoyCallback callback) {
+                fail();
             }
 
             @Override public void saveExtras(VisitParams params, AhoyCallback callback) {

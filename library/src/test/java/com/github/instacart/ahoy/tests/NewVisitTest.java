@@ -16,6 +16,7 @@
 package com.github.instacart.ahoy.tests;
 
 import com.github.instacart.ahoy.Ahoy;
+import com.github.instacart.ahoy.Event;
 import com.github.instacart.ahoy.LifecycleCallbackWrapper;
 import com.github.instacart.ahoy.Storage;
 import com.github.instacart.ahoy.Visit;
@@ -77,6 +78,11 @@ public class NewVisitTest {
                 assertEquals(visitParams, params);
             }
 
+            @Override
+            public void trackEvent(String visitToken, String visitorToken, Event event, AhoyCallback callback) {
+                fail();
+            }
+
             @Override public void saveExtras(VisitParams params, AhoyCallback callback) {
                 fail();
             }
@@ -100,6 +106,11 @@ public class NewVisitTest {
             @Override public void saveVisit(VisitParams params, AhoyCallback callback) {
                 latch.countDown();
                 assertEquals(visitParams, params);
+            }
+
+            @Override
+            public void trackEvent(String visitToken, String visitorToken, Event event, AhoyCallback callback) {
+                fail();
             }
 
             @Override public void saveExtras(VisitParams params, AhoyCallback callback) {
@@ -128,6 +139,11 @@ public class NewVisitTest {
             @Override public void saveVisit(VisitParams params, AhoyCallback callback) {
                 callback.onSuccess(visit);
                 assertEquals(visitParams, params);
+            }
+
+            @Override
+            public void trackEvent(String visitToken, String visitorToken, Event event, AhoyCallback callback) {
+                fail();
             }
 
             @Override public void saveExtras(VisitParams params, AhoyCallback callback) {
