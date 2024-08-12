@@ -21,6 +21,7 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.github.instacart.ahoy.AhoySingleton;
+import com.github.instacart.ahoy.Event;
 import com.github.instacart.ahoy.sample.databinding.SimpleActivityBinding;
 
 import java.util.Collections;
@@ -36,6 +37,7 @@ public class SimpleActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         binding.newVisit.setOnClickListener(view -> AhoySingleton.newVisit(Collections.emptyMap()));
+        binding.trackEvent.setOnClickListener(view -> AhoySingleton.trackEvent(new Event("Test event", Collections.emptyMap())));
         binding.saveUtms.setOnClickListener(view -> startActivity(new Intent(this, UtmActivity.class)));
     }
 

@@ -2,6 +2,7 @@
     <string name="app_name">Ahoy Premier</string>
     <string name="edit_utms">Edit Utms</string>
     <string name="new_visit">New visit</string>
+    <string name="track_event">Track event</string>
     <string name="save_utm_params">Save Changes</string>
     <string name="visitor_token">Visitor token: %1$s</string>
     <string name="visit_token">Visit token: %1$s</string>
