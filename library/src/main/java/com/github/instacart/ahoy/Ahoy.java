@@ -184,7 +184,7 @@ public class Ahoy {
                 visitFlowable = RxAhoyDelegate.createNewVisitStream(delegate, newVisitRequest.getVisitParams());
             } else if (request instanceof TrackEventRequest) {
                 TrackEventRequest trackEventRequest = (TrackEventRequest) request;
-                visitFlowable = RxAhoyDelegate.createTrackEventStream(visit.visitToken(), visitorToken, delegate, trackEventRequest.getEvent());
+                visitFlowable = RxAhoyDelegate.createTrackEventStream(visit, visitorToken, delegate, trackEventRequest.getEvent());
             } else {
                 SaveExtrasRequest saveExtrasRequest = (SaveExtrasRequest) request;
                 VisitParams params = VisitParams.create(visitorToken, visit, saveExtrasRequest.getExtras());
