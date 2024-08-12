@@ -15,6 +15,7 @@
  */
 package com.github.instacart.ahoy.delegate.retrofit2;
 
+import android.annotation.SuppressLint;
 import android.net.Uri;
 import androidx.collection.ArrayMap;
 
@@ -22,6 +23,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.instacart.ahoy.Event;
 import com.github.instacart.ahoy.Visit;
 import com.github.instacart.ahoy.delegate.AhoyDelegate;
 import com.github.instacart.ahoy.delegate.DeviceInfo;
@@ -35,7 +37,9 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
+import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -60,6 +64,9 @@ public class Retrofit2Delegate implements AhoyDelegate {
 
         @POST("/ahoy/visits")
         Observable<VisitResponse> registerVisit(@Body Map<String, Object> body);
+
+        @POST("/ahoy/events")
+        Observable<EventResponse> trackEvent(@Body Map<String, Object> body);
     }
 
     @AutoValue
@@ -68,6 +75,17 @@ public class Retrofit2Delegate implements AhoyDelegate {
         @JsonCreator
         public static VisitResponse create(@JsonProperty("visit_token") String visitId) {
             return new AutoValue_Retrofit2Delegate_VisitResponse(visitId);
+        }
+
+        public abstract String visitId();
+    }
+
+    @AutoValue
+    public static abstract class EventResponse {
+
+        @JsonCreator
+        public static EventResponse create(@JsonProperty("visit_token") String visitId) {
+            return new AutoValue_Retrofit2Delegate_EventResponse(visitId);
         }
 
         public abstract String visitId();
@@ -113,6 +131,7 @@ public class Retrofit2Delegate implements AhoyDelegate {
         this.visitDuration = visitDuration;
     }
 
+    @SuppressLint("CheckResult")
     private void makeRequest(String visitToken, final VisitParams visitParams, final AhoyCallback callback) {
         Map<String, Object> request = new ArrayMap<>();
         request.put(Visit.OS, deviceInfo.getOs());
@@ -144,6 +163,21 @@ public class Retrofit2Delegate implements AhoyDelegate {
                 }, callback::onFailure);
     }
 
+    @SuppressLint("CheckResult")
+    private void makeEventRequest(String visitToken, String visitorToken, final Event event, final AhoyCallback callback) {
+        Map<String, Object> request = new ArrayMap<>();
+        request.put(Visit.VISITOR_TOKEN, visitorToken);
+        request.put(Visit.VISIT_TOKEN, visitToken);
+        request.putAll(TypeUtil.ifNull(event.toMap(), Collections.emptyMap()));
+
+        api.trackEvent(request)
+                .compose(RxBackoff.backoff())
+                .subscribeOn(Schedulers.io())
+                .subscribe(eventResponse -> {
+                    callback.onSuccess(null);
+                }, callback::onFailure);
+    }
+
     @Override public String newVisitorToken() {
         return UUID.randomUUID().toString();
     }
@@ -156,6 +190,13 @@ public class Retrofit2Delegate implements AhoyDelegate {
 
         String visitToken = UUID.randomUUID().toString();
         makeRequest(visitToken, visitParams, callback);
+    }
+
+    @Override public void trackEvent(String visitToken, String visitorToken, Event event, AhoyCallback callback) {
+        if (TypeUtil.isEmpty(visitorToken) || TypeUtil.isEmpty(visitToken)) {
+            throw new IllegalArgumentException("Please provide visit & visitor token");
+        }
+        makeEventRequest(visitToken, visitorToken, event, callback);
     }
 
     @Override public void saveExtras(VisitParams visitParams, AhoyCallback callback) {

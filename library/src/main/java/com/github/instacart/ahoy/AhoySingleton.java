@@ -59,6 +59,10 @@ public class AhoySingleton {
         sInstance.newVisit(extraParams);
     }
 
+    public static void trackEvent(Event event) {
+        sInstance.trackEvent(event);
+    }
+
     public static void saveExtras(Map<String, Object> extraParams) {
         sInstance.saveExtras(extraParams);
     }
