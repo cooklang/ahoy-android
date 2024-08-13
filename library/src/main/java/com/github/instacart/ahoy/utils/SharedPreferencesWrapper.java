@@ -23,6 +23,7 @@ import androidx.collection.ArrayMap;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import java.io.IOException;
 import java.util.Map;
@@ -37,7 +38,8 @@ public class SharedPreferencesWrapper {
 
     public SharedPreferencesWrapper(Context context, String fileName) {
         mSharedPreferences = context.getSharedPreferences(fileName, Context.MODE_PRIVATE);
-        mObjectMapper = new ObjectMapper();
+        mObjectMapper = new ObjectMapper()
+                .registerModule(new JavaTimeModule());
     }
 
     public void delete(String key) {

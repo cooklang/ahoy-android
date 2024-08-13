@@ -21,6 +21,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
@@ -56,7 +58,10 @@ public class NewEventTest {
         when(storage.readVisit(nullable(Visit.class))).thenReturn(visit);
         
         // Create Event object
-        Map<String, Object> properties = Collections.singletonMap("key", "value");
+        Map<String, Object> properties = new HashMap<>();
+        properties.put("key", "value");
+        properties.put("date", new Date());
+        
         String eventName = "Sample Event";
         Event event = Event.create(eventName, properties);
 

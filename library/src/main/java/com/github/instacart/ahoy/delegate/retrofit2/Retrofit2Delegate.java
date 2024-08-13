@@ -23,6 +23,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.github.instacart.ahoy.Event;
 import com.github.instacart.ahoy.Visit;
 import com.github.instacart.ahoy.delegate.AhoyDelegate;
@@ -116,7 +117,8 @@ public class Retrofit2Delegate implements AhoyDelegate {
 
     public Retrofit2Delegate(String baseUrl, OkHttpClient okHttpClient, long visitDuration,
             final DeviceInfo deviceInfo) {
-        ObjectMapper mapper = new ObjectMapper();
+        ObjectMapper mapper = new ObjectMapper()
+                .registerModule(new JavaTimeModule());
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
         Retrofit retrofit = new Retrofit.Builder()

@@ -66,6 +66,7 @@ dependencies {
     implementation "com.fasterxml.jackson.core:jackson-annotations:${project.jacksonVersion}"
     implementation "com.fasterxml.jackson.core:jackson-core:${project.jacksonVersion}"
     implementation "com.fasterxml.jackson.core:jackson-databind:${project.jacksonVersion}"
+    implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${project.jacksonVersion}"
 
     implementation "com.squareup.okhttp3:logging-interceptor:${project.okhttpVersion}"
     implementation "com.squareup.okhttp3:okhttp:${project.okhttpVersion}"
