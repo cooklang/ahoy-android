@@ -3,7 +3,7 @@ plugins {
     id 'maven-publish'
 }
 
-group = 'com.github.riparide'
+group = 'com.github.cooklang'
 version = project.versionName
 
 android {
