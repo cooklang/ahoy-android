@@ -6,6 +6,9 @@ plugins {
 group = 'com.github.cooklang'
 version = project.versionName
 
+def gprProperties = new Properties()
+file("../gpr.properties").withInputStream { gprProperties.load(it) }
+
 android {
     namespace 'com.github.instacart.ahoy'
     compileSdkVersion 33
@@ -49,6 +52,16 @@ android {
             withSourcesJar()
         }
     }
+
+    lint {
+        baseline = file("lint-baseline.xml")
+    }
+
+    lintOptions {
+        disable 'TimberTagLength'
+        disable 'LogNotTimber'
+        abortOnError false
+    }
 }
 
 dependencies {
@@ -79,17 +92,42 @@ dependencies {
 
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.mockito:mockito-core:2.25.1'
+
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.2'
+    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.15.2'
 }
 
 publishing {
     publications {
-        release(MavenPublication) {
+        ahoyAndroid(MavenPublication) {
             groupId = 'com.github.cooklang'
             artifactId = 'ahoy-android'
             version = project.versionName
-
             afterEvaluate {
-                from components.findByName('release')
+                from components.release
+            }
+
+            pom {
+                name = 'ahoy-android'
+                description = 'Cooklang Parser Library for Android'
+                url = 'https://github.com/cooklang/ahoy-android'
+
+                scm {
+                    connection = 'scm:git:git://github.com/cooklang/ahoy-android.git'
+                    developerConnection = 'scm:git:ssh://github.com:cooklang/ahoy-android.git'
+                    url = 'https://github.com/cooklang/ahoy-android'
+                }
+            }
+        }
+    }
+
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/cooklang/ahoy-android")
+            credentials {
+                username = gprProperties['gpr.user']
+                password = gprProperties['gpr.token']
             }
         }
     }

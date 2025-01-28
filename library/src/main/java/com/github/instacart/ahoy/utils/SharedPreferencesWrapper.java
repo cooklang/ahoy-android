@@ -22,6 +22,7 @@ import androidx.annotation.Nullable;
 import androidx.collection.ArrayMap;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
@@ -123,7 +124,7 @@ public class SharedPreferencesWrapper {
 
         Map<String, Object> value = null;
         try {
-            value = mObjectMapper.readValue(json, ArrayMap.class);
+            value = mObjectMapper.readValue(json, new TypeReference<Map<String, Object>>() {});
         } catch (IOException e) {
             Timber.e(e);
         }
