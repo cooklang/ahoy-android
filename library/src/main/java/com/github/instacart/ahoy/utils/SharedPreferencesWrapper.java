@@ -29,6 +29,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
+import java.util.HashMap;
 
 import timber.log.Timber;
 
@@ -124,7 +125,9 @@ public class SharedPreferencesWrapper {
 
         Map<String, Object> value = null;
         try {
-            value = mObjectMapper.readValue(json, new TypeReference<Map<String, Object>>() {});
+            TypeReference<HashMap<String, Object>> typeRef =
+                new TypeReference<HashMap<String, Object>>() {};
+            value = mObjectMapper.readValue(json, typeRef);
         } catch (IOException e) {
             Timber.e(e);
         }
